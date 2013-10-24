@@ -1,0 +1,32 @@
+{
+  "name": "ReportTable",
+  "description": "A Reporting table for jquery that provides some extra features.",
+  "keywords": [
+    "reporttable",
+    "report table",
+    "html table",
+    "custom table",
+    "pmg"
+  ],
+  "main": ["./dist/reporttable.js"],
+  "dependencies": {
+    "jquery": ">= v1.8"
+  },
+  "location": "https://github.com/AgencyPMG/ReportTable",
+  "licence": "MIT",
+  "ignore": [
+    "test/",
+    "src/",
+    "Gruntfile.js",
+    "karma.conf.js"
+  ],
+  "author": {
+    "name": "PMG/Chris Alvares",
+    "url": "http://pmg.co"
+  },
+  "homepage": "https://github.com/AgencyPMG/ReportTable",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AgencyPMG/ReportTable.git"
+  }
+}
