@@ -117,7 +117,7 @@
 		var offset = -(startingPosition - $(window).height()) + $(window).scrollTop() - this.options.offsetFooterHeight; 
 		if(hasScroller) offset -= this.scroller.height() - 2;
 		
-		if(offset > 0) offset = 0;
+		if(offset > 0 || (offset + this.container.outerHeight()) < 0) offset = 0;
 		this.footer.css("top", offset);
 		
 		if(hasScroller) {
