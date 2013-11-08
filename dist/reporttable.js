@@ -165,11 +165,6 @@
 				$(this).width(widths[index]);
 			});
 		});
-		
-		//wedo the scrollbar too
-		if(typeof this.scroller !== 'undefined') {
-			
-		}
 	}
 	
 	ReportTable.prototype.createFooterScrollbar = function()
@@ -246,12 +241,12 @@
 		});
 	}
 
-if (typeof define === "function" && define.amd) {
-        define(["jquery"], function($) {
-                "use strict";
-                return ReportTable;
-   });
-}
+    if (typeof define === "function" && define.amd) {
+            define(["jquery"], function($) {
+                    "use strict";
+                    return ReportTable;
+       });
+    }
 
 
 })(jQuery);
