@@ -21,6 +21,7 @@
 	{
 		this.container = $(container);
 		this.options = $.extend(true, {}, this.defaultOptions, options);	
+        console.log(options);
 		
 		this.buildTable();
 	}
@@ -36,8 +37,15 @@
 		
 		$(window).scroll(this.refreshFunct);		
 		$(window).resize(this.resizeFunct);
-		
-		this.interval = setInterval($.proxy(this.scroll, this), this.options.pollInterval);
+	
+        var scrollDefaultObject;
+        console.log(this.options.scrollDefaultObject);
+        if (scrollDefaultObject = this.options.scrollDefaultObject)	 {
+            var that = this;
+            scrollDefaultObject.scroll(function() {that.scroll()});
+        } else { 
+    		this.interval = setInterval($.proxy(this.scroll, this), this.options.pollInterval);
+        }
 		this.resizeInterval = setInterval($.proxy(this.resize, this), this.options.resizePollInterval);
 		this.container.bind("remove", $.proxy(function(){ 
 			clearInterval(this.interval);
@@ -231,7 +239,8 @@
 		pollInterval:400,
 		resizePollInterval:2000,
 		headerCell:"th",
-		scrollContainer:null //a jquery object
+		scrollContainer:null,
+        scrollDefaultObject:null
 	}
 
 	$.fn.reportTable = function(options)
