@@ -184,13 +184,11 @@
     {
         this.resizeHeader();
         this.resizeFooter();
-        //this.container.css("margin-top", -this.header.height());
     }
 
     ReportTable.prototype.resizeHeader = function()
     {
         //take the first row of the table, do not use colgroup here as it is deprecated in html5
-        //var widths = this.getWidthsFromFirstRow();
         var widths = this.getWidthsFromFirstRow();
 
         var that = this;
