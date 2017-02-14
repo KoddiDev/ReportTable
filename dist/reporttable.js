@@ -53,7 +53,7 @@
         }, this));
 
         this.container.on('colFreezeToggle', function (event, index) {
-            var widths = that.getWidthsFromFirstRow();
+            var widths = that.getOuterWidthsFromFirstRow();
 
             $('#frozenCols, #frozenHeader, #frozenFooter').find('tr').each(function () {
                 var child = $(this).children().eq(index);
@@ -190,21 +190,22 @@
     ReportTable.prototype.resizeHeader = function()
     {
         //take the first row of the table, do not use colgroup here as it is deprecated in html5
+        //var widths = this.getWidthsFromFirstRow();
         var widths = this.getWidthsFromFirstRow();
 
         var that = this;
         this.header.width(this.body.width());
         this.header.find("tr").each(function(rowCount) {
             $(this).children().each(function(index) {
-                if(index >= widths.length) return false;
-console.log(widths[index]);
+                if(index >= widths.length) {
+                    return false;
+                }
                 $(this).width(widths[index]);
             });
         });
 
         this.scroller.width(this.options.scrollContainer.width());
         this.scroller.find("."+this.options.cssPrefix + "_scrollbarInner").width(this.container.width());
-
     }
 
     ReportTable.prototype.resizeFooter = function()
@@ -273,6 +274,18 @@ console.log(widths[index]);
         var widths = [];
         firstRow.find("td").each(function(index) {
             widths.push($(this).width());
+        });
+
+        return widths;
+    }
+
+    ReportTable.prototype.getOuterWidthsFromFirstRow = function()
+    {
+        var firstRow = this.body.find("tr").eq(0);
+
+        var widths = [];
+        firstRow.find("td").each(function(index) {
+            widths.push($(this).outerWidth());
         });
 
         return widths;
