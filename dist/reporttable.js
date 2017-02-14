@@ -189,7 +189,7 @@
     ReportTable.prototype.resizeHeader = function()
     {
         //take the first row of the table, do not use colgroup here as it is deprecated in html5
-        var widths = this.getWidthsFromFirstRow();
+        var widths = this.getOuterWidthsFromFirstRow();
 
         var that = this;
         this.header.width(this.body.width());
@@ -198,7 +198,7 @@
                 if(index >= widths.length) {
                     return false;
                 }
-                $(this).width(widths[index]);
+                $(this).css("min-width", widths[index]);
             });
         });
 
