@@ -55,12 +55,16 @@
         this.frozenIndices = [];
         this.container.on("colFreezeToggle", function (event, index) {
             var widths = that.getOuterWidthsFromFirstRow();
+            var headerHeight = that.getHeightFromHeader();
+            var rowHeight = that.getHeightFromFirstRow();
             var frozenIndex = that.frozenIndices.indexOf(index);
 
             frozenIndex == -1 ? 
                 that.frozenIndices.push(index) : that.frozenIndices.splice(frozenIndex, 1);
 
             $(".reporttable_header, .koddiTableGraph, .reporttable_footer").find("tr").each(function () {
+                $(this).height(rowHeight);
+
                 var child = $(this).children().eq(index);
                 child
                     .toggle()
@@ -73,16 +77,29 @@
                 }
             });
 
+            $('#frozenHeader').find("tr").height(headerHeight);
+            $('#frozenCols').find("thead tr").height(headerHeight);
+
             that.accommodateFrozen($('#frozenCols'));
         });
 
         $('#frozenCols').on("rowAdded", function (event, args) {
-            var clonedRow = $(args['row']).clone();
+            var row = $(args['row']);
+            var clonedRow = row.clone();
+
             clonedRow.children().each(function (i) {
                 if (that.frozenIndices.indexOf(i) == -1) {
                     $(this).hide();
                 }
             });
+
+            row.children().each(function (i) {
+                if (that.frozenIndices.indexOf(i) != -1) {
+                    $(this).hide();
+                }
+            });
+
+            clonedRow.height(row.height());
 
             $('#frozenCols').find('tbody').append(clonedRow);
         });
@@ -307,6 +324,26 @@
         });
 
         return widths;
+    }
+
+    ReportTable.prototype.getHeightFromHeader = function()
+    {
+        var height = 0;
+        this.header.find("tr").each(function(index) {
+            var newHeight = $(this).height();
+            if (height < newHeight) {
+                height = newHeight;
+            }
+        });
+
+        return height;
+    }
+
+    ReportTable.prototype.getHeightFromFirstRow = function()
+    {
+        var firstRow = this.body.find("tr").eq(0);
+
+        return $(firstRow).height();
     }
 
     ReportTable.prototype.defaultOptions = {
