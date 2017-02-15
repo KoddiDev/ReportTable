@@ -52,14 +52,22 @@
             this.scroller.remove();
         }, this));
 
-        this.container.on('colFreezeToggle', function (event, index) {
+        this.frozenIndices = [];
+        this.container.on("colFreezeToggle", function (event, index) {
             var widths = that.getOuterWidthsFromFirstRow();
+            var frozenIndex = that.frozenIndices.indexOf(index);
 
-            $('#frozenCols, #frozenHeader, #frozenFooter').find('tr').each(function () {
+            frozenIndex == -1 ? 
+                that.frozenIndices.push(index) : that.frozenIndices.splice(frozenIndex, 1);
+
+            $(".reporttable_header, .koddiTableGraph, .reporttable_footer").find("tr").each(function () {
                 var child = $(this).children().eq(index);
                 child
                     .toggle()
                     .css({"width":widths[index]});
+                child.find(".freeze-column, .frozen-column")
+                    .removeClass("invisible");
+
                 if (!child.text().length) {
                     child.html("&nbsp;");
                 }
@@ -67,13 +75,24 @@
 
             that.accommodateFrozen($('#frozenCols'));
         });
+
+        $('#frozenCols').on("rowAdded", function (event, args) {
+            var clonedRow = $(args['row']).clone();
+            clonedRow.children().each(function (i) {
+                if (that.frozenIndices.indexOf(i) == -1) {
+                    $(this).hide();
+                }
+            });
+
+            $('#frozenCols').find('tbody').append(clonedRow);
+        });
     }
 
     ReportTable.prototype.accommodateFrozen = function(table)
     {
         selectedRow = $(table).children().children().first();
 
-        $('#regularContainer').css({"left":$("#frozenContainer").width()});
+        $("#regularContainer").css({"left":$("#frozenContainer").width()});
     }
 
     ReportTable.prototype.reset = function()
@@ -84,7 +103,6 @@
             this.footer.remove();
 
         this.container.css({"position":"relative"});
-        //this.container.find("thead, tfoot").css("visibility", "hidden");
         this.header = $("<table>")
             .addClass(this.options.cssPrefix+"_header")
             .css({
@@ -113,7 +131,8 @@
         this.frozenTable = $("<div>").addClass('inline-block').attr('id', 'frozenContainer');
         this.regularTable = $("<div>").addClass('inline-block').attr('id', 'regularContainer');
 
-        this.frozenHeader = this.header.clone().attr("id", "frozenHeader");
+        this.frozenHeader = this.header.clone(true).attr("id", "frozenHeader");
+        this.frozenHeader.find(".freeze-column").toggleClass("freeze-column frozen-column");
         this.frozenHeader.find("td").hide();
         this.frozenTable.append(this.frozenHeader);
 
@@ -132,7 +151,7 @@
         this.container.before(this.header);
         this.container.after(this.footer);
 
-        $(".koddiTableGraph,.koddiComparisonTableGraph").find("thead").css("visibility", "hidden");
+        $(".koddiTableGraph").find("thead").css("visibility", "hidden");
         $(".koddiTableGraph").find("tfoot").css("visibility", "hidden");
         this.refresh();
     }
@@ -199,6 +218,7 @@
                     return false;
                 }
                 $(this).css("min-width", widths[index]);
+                $(this).css("max-width", widths[index]);
             });
         });
 
