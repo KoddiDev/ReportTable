@@ -81,6 +81,7 @@
             $('#frozenCols').find("thead tr").height(headerHeight);
 
             that.accommodateFrozen($('#frozenCols'));
+            that.resize();
         });
 
         $('#frozenCols').on("rowAdded", function (event, args) {
