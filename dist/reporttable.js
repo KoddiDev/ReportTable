@@ -63,7 +63,7 @@
             frozenIndex == -1 ? 
                 that.frozenIndices.push(index) : that.frozenIndices.splice(frozenIndex, 1);
 
-            that.frozenContainer.children().find("tr").each(function () {
+            that.frozenContainer.find("table").find("tr").each(function () {
                 $(this).height(rowHeight);
 
                 var child = $(this).children().eq(index);
@@ -170,8 +170,8 @@
         this.container.before(this.header);
         this.container.after(this.footer);
 
-        this.frozenTable.children().eq(2).find("thead, tfoot").css("visibility", "hidden");
-        this.regularTable.children().eq(2).find("thead, tfoot").css("visibility", "hidden");
+        this.frozenTable.find("table").eq(2).find("thead, tfoot").css("visibility", "hidden");
+        this.regularTable.find("table").eq(2).find("thead, tfoot").css("visibility", "hidden");
         this.refresh();
     }
 
