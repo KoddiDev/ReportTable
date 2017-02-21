@@ -52,6 +52,7 @@
             this.scroller.remove();
         }, this));
 
+        var that = this;
         this.frozenIndices = [];
         this.container.on("colFreezeToggle", function (event, index) {
             var widths = that.getOuterWidthsFromFirstRow();
@@ -62,7 +63,7 @@
             frozenIndex == -1 ? 
                 that.frozenIndices.push(index) : that.frozenIndices.splice(frozenIndex, 1);
 
-            $(".reporttable_header, .koddiTableGraph, .reporttable_footer").find("tr").each(function () {
+            that.frozenContainer.find("table").find("tr").each(function () {
                 $(this).height(rowHeight);
 
                 var child = $(this).children().eq(index);
@@ -77,14 +78,14 @@
                 }
             });
 
-            $('#frozenHeader').find("tr").height(headerHeight);
-            $('#frozenCols').find("thead tr").height(headerHeight);
+            that.frozenHeader.find("tr").height(headerHeight);
+            that.frozenContainer.find("thead tr").height(headerHeight);
 
             that.accommodateFrozen($('#frozenCols'));
             that.resize();
         });
 
-        $('#frozenCols').on("rowAdded", function (event, args) {
+        this.frozenCols.on("rowAdded", function (event, args) {
             var row = $(args['row']);
             var clonedRow = row.clone();
 
@@ -102,7 +103,7 @@
 
             clonedRow.height(row.height());
 
-            $('#frozenCols').find('tbody').append(clonedRow);
+            that.frozenCols.find('tbody').append(clonedRow);
         });
     }
 
@@ -110,7 +111,7 @@
     {
         selectedRow = $(table).children().children().first();
 
-        $("#regularContainer").css({"left":$("#frozenContainer").width()});
+        this.regularTable.css({"left":this.frozenContainer.width()});
     }
 
     ReportTable.prototype.reset = function()
@@ -169,8 +170,8 @@
         this.container.before(this.header);
         this.container.after(this.footer);
 
-        $(".koddiTableGraph").find("thead").css("visibility", "hidden");
-        $(".koddiTableGraph").find("tfoot").css("visibility", "hidden");
+        this.frozenTable.find("table").eq(2).find("thead, tfoot").css("visibility", "hidden");
+        this.regularTable.find("table").eq(2).find("thead, tfoot").css("visibility", "hidden");
         this.refresh();
     }
 
