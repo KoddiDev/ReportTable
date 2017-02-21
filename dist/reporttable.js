@@ -63,13 +63,11 @@
             frozenIndex == -1 ? 
                 that.frozenIndices.push(index) : that.frozenIndices.splice(frozenIndex, 1);
 
-            that.frozenContainer.find("table").find("tr").each(function () {
+            that.parentContainer.find("tr").each(function () {
                 $(this).height(rowHeight);
 
                 var child = $(this).children().eq(index);
-                child
-                    .toggle()
-                    .css({"width":widths[index]});
+                child.toggle();
                 child.find(".freeze-column, .frozen-column")
                     .removeClass("invisible");
 
@@ -78,8 +76,10 @@
                 }
             });
 
-            that.frozenHeader.find("tr").height(headerHeight);
-            that.frozenContainer.find("thead tr").height(headerHeight);
+            that.parentContainer.find("tr").height(headerHeight);
+            that.parentContainer.find("tr").each(function () {
+                $(this).children("td").eq(index).width(widths[index]);
+            });
 
             that.accommodateFrozen($('#frozenCols'));
             that.resize();
@@ -111,7 +111,7 @@
     {
         selectedRow = $(table).children().children().first();
 
-        this.regularTable.css({"left":this.frozenContainer.width()});
+        this.regularTable.css({"left":this.parentContainer.find("#frozenContainer").width()});
     }
 
     ReportTable.prototype.reset = function()
@@ -120,6 +120,8 @@
             this.header.remove();
         if(typeof this.footer !== 'undefined')
             this.footer.remove();
+
+        this.parentContainer = this.container.parent();
 
         this.container.css({"position":"relative"});
         this.header = $("<table>")
@@ -170,8 +172,8 @@
         this.container.before(this.header);
         this.container.after(this.footer);
 
-        this.frozenTable.find("table").eq(2).find("thead, tfoot").css("visibility", "hidden");
-        this.regularTable.find("table").eq(2).find("thead, tfoot").css("visibility", "hidden");
+        this.frozenTable.find("table").eq(1).find("thead, tfoot").css("visibility", "hidden");
+        this.regularTable.find("table").eq(1).find("thead, tfoot").css("visibility", "hidden");
         this.refresh();
     }
 
