@@ -63,13 +63,11 @@
             frozenIndex == -1 ? 
                 that.frozenIndices.push(index) : that.frozenIndices.splice(frozenIndex, 1);
 
-            that.frozenContainer.find("table").find("tr").each(function () {
+            that.container.find("tr").each(function () {
                 $(this).height(rowHeight);
 
                 var child = $(this).children().eq(index);
-                child
-                    .toggle()
-                    .css({"width":widths[index]});
+                child.toggle();
                 child.find(".freeze-column, .frozen-column")
                     .removeClass("invisible");
 
@@ -78,8 +76,10 @@
                 }
             });
 
-            that.frozenHeader.find("tr").height(headerHeight);
-            that.frozenContainer.find("thead tr").height(headerHeight);
+            that.frozenHeader.find("tr")
+                .height(headerHeight)
+                .width(widths[index]);
+            that.container.find("tr").height(headerHeight);
 
             that.accommodateFrozen($('#frozenCols'));
             that.resize();
@@ -111,7 +111,7 @@
     {
         selectedRow = $(table).children().children().first();
 
-        this.regularTable.css({"left":this.frozenContainer.width()});
+        this.regularTable.css({"left":this.container.find("#frozenContainer").width()});
     }
 
     ReportTable.prototype.reset = function()
@@ -169,6 +169,7 @@
 
         this.container.before(this.header);
         this.container.after(this.footer);
+        this.container = this.container.parents(".koddiTableGraphContainer");
 
         this.frozenTable.find("table").eq(2).find("thead, tfoot").css("visibility", "hidden");
         this.regularTable.find("table").eq(2).find("thead, tfoot").css("visibility", "hidden");
