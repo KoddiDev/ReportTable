@@ -345,7 +345,6 @@
     ReportTable.prototype.getHeightFromFirstRow = function()
     {
         var firstRow = this.body.find("tr").eq(0);
-console.log($(firstRow).height());
 
         return $(firstRow).height();
     }
