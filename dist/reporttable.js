@@ -78,7 +78,7 @@
 
             that.parentContainer.find("tr").height(headerHeight);
             that.parentContainer.find("tr").each(function () {
-                $(this).children("td").eq(index).width(widths[index]);
+                $(this).children("td,th").eq(index).width(widths[index]);
             });
 
             that.accommodateFrozen($('#frozenCols'));
@@ -154,7 +154,7 @@
 
         this.frozenHeader = this.header.clone(true).attr("id", "frozenHeader");
         this.frozenHeader.find(".freeze-column").trigger("freezeToggle");
-        this.frozenHeader.find("td").hide();
+        this.frozenHeader.find("td,th").hide();
         this.frozenTable.append(this.frozenHeader);
 
         this.frozenTable.append(this.frozenCols);
