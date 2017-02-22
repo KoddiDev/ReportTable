@@ -77,7 +77,7 @@
             });
 
             that.parentContainer.find("tr").height(headerHeight);
-            that.parentContainer.find("tr").each(function () {
+            that.parentContainer.find("#frozenContainer tr").each(function () {
                 $(this).children("td").eq(index).width(widths[index]);
             });
 
