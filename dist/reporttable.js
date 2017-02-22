@@ -64,6 +64,7 @@
                 that.frozenIndices.push(index) : that.frozenIndices.splice(frozenIndex, 1);
 
             that.parentContainer.find("tr").height(rowHeight);
+            that.parentContainer.find("thead tr").height(headerHeight);
             that.parentContainer.find("tr").each(function () {
 
                 var child = $(this).children().eq(index);
