@@ -68,7 +68,7 @@
 
                 var child = $(this).children().eq(index);
                 child.toggle();
-                child.find(".freeze-column, .frozen-column")
+                child.find(".frozen-column")
                     .removeClass("invisible");
 
                 if (!child.text().length) {
@@ -153,7 +153,7 @@
         this.regularTable = $("<div>").addClass('inline-block').attr('id', 'regularContainer');
 
         this.frozenHeader = this.header.clone(true).attr("id", "frozenHeader");
-        this.frozenHeader.find(".freeze-column").toggleClass("freeze-column frozen-column");
+        this.frozenHeader.find(".freeze-column").trigger("freezeToggle");
         this.frozenHeader.find("td,th").hide();
         this.frozenTable.append(this.frozenHeader);
 
