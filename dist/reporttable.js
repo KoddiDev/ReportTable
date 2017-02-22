@@ -68,7 +68,7 @@
 
                 var child = $(this).children().eq(index);
                 child.toggle();
-                child.find(".freeze-column, .frozen-column")
+                child.find(".frozen-column")
                     .removeClass("invisible");
 
                 if (!child.text().length) {
@@ -78,7 +78,7 @@
 
             that.parentContainer.find("tr").height(headerHeight);
             that.parentContainer.find("tr").each(function () {
-                $(this).children("td").eq(index).width(widths[index]);
+                $(this).children("td,th").eq(index).width(widths[index]);
             });
 
             that.accommodateFrozen($('#frozenCols'));
@@ -153,11 +153,12 @@
         this.regularTable = $("<div>").addClass('inline-block').attr('id', 'regularContainer');
 
         this.frozenHeader = this.header.clone(true).attr("id", "frozenHeader");
-        this.frozenHeader.find(".freeze-column").toggleClass("freeze-column frozen-column");
-        this.frozenHeader.find("td").hide();
+        this.frozenHeader.find(".freeze-column").trigger("freezeToggle");
+        this.frozenHeader.find("td,th").hide();
         this.frozenTable.append(this.frozenHeader);
 
         this.frozenTable.append(this.frozenCols);
+        this.frozenTable.find("th").hide();
 
         this.frozenFooter = this.footer.clone()
             .attr("id", "frozenFooter");
