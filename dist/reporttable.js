@@ -63,8 +63,8 @@
             frozenIndex == -1 ? 
                 that.frozenIndices.push(index) : that.frozenIndices.splice(frozenIndex, 1);
 
+            that.parentContainer.find("tr").height(rowHeight);
             that.parentContainer.find("tr").each(function () {
-                $(this).height(rowHeight);
 
                 var child = $(this).children().eq(index);
                 child.toggle();
@@ -76,7 +76,6 @@
                 }
             });
 
-            that.parentContainer.find("tr").height(headerHeight);
             that.parentContainer.find("tr").each(function () {
                 $(this).children("td").eq(index).width(widths[index]);
             });
