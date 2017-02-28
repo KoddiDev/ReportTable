@@ -137,7 +137,7 @@
             .addClass(this.options.cssPrefix+"_footer")
             .css({
                 position:"relative",
-                "margin-top":-this.container.children("tfoot").height(),
+                "margin-top":-this.container.children("tfoot").height()-4,
                 "table-layout":"fixed"
             })
             .append(this.container.children("tfoot").clone(true));
@@ -186,7 +186,9 @@
 
     ReportTable.prototype.scroll = function()
     {
-        if ($(window).scrollTop() + $(window).height() > $(document).height()) return;
+        if ($(window).scrollTop() + $(window).height() > $(document).height()) {
+            return;
+        }
         this.moveHeader();
         this.moveFooter();
     }
@@ -211,9 +213,12 @@
         var offset = -(startingPosition - $(window).height()) + $(window).scrollTop() - this.options.offsetFooterHeight;
         if(hasScroller) offset -= this.scroller.height() - 2;
 
-        if(offset > 0 || (offset + this.container.outerHeight()) < 0) offset = 0;
-        this.footer.css("top", offset);
-        this.frozenFooter.css("top", offset);
+        if (offset > 0 || (offset + this.container.outerHeight()) < 0) {
+            offset = 0;
+        }
+
+        this.footer.css("top", offset+4);
+        this.frozenFooter.css("top", offset+4);
 
         if(hasScroller) {
             this.scroller.css("top", offset - this.scroller.height() - 2);
