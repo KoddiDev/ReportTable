@@ -33,11 +33,19 @@
         this.refreshFunct = $.proxy(this.scroll, this);
         this.resizeFunct = $.proxy(this.resize, this);
 
+        var that = this;
         $(window).scroll(this.refreshFunct);
         $(window).resize(this.resizeFunct);
+        this.scrollContainer.scroll(function() {
+            if (this.scrollHeight <= $(this).scrollTop() + $(this).height()) { 
+                that.parentContainer.trigger("needsMoreData", [that.parentContainer]);
+            }
+
+            that.frozenScrollContainer.scrollTop($(this).scrollTop());
+            that.regularTable.find(".headerFooterContainer").scrollLeft($(this).scrollLeft());
+        });
 
         var scrollEventObject;
-        var that = this;
         if (scrollEventObject = this.options.scrollEventObject)  {
             scrollEventObject.scroll(function() {that.scroll()});
         } else {
@@ -56,6 +64,7 @@
         this.frozenIndices = [];
         this.container.on("colFreezeToggle", function (event, index) {
             var widths = that.getOuterWidthsFromFirstRow();
+
             var headerHeight = that.getHeightFromHeader();
             var rowHeight = that.getHeightFromFirstRow();
             var frozenIndex = that.frozenIndices.indexOf(index);
@@ -77,12 +86,13 @@
             });
 
             that.parentContainer.find("tr").height(headerHeight);
-            that.parentContainer.find("tr").each(function () {
+            that.parentContainer.find("#frozenContainer tr").each(function () {
                 $(this).children("td,th").eq(index).width(widths[index]);
             });
 
             that.accommodateFrozen($('#frozenCols'));
             that.resize();
+            that.scrollContainer.scroll();
         });
 
         this.frozenCols.on("rowAdded", function (event, args) {
@@ -111,7 +121,9 @@
     {
         selectedRow = $(table).children().children().first();
 
-        this.regularTable.css({"left":this.parentContainer.find("#frozenContainer").width()});
+        var width = this.parentContainer.find("#frozenContainer").width();
+        this.regularTable.css("left", width);
+        this.scrollContainer.css("max-width", this.parentContainer.width() - width);
     }
 
     ReportTable.prototype.reset = function()
@@ -137,7 +149,7 @@
             .addClass(this.options.cssPrefix+"_footer")
             .css({
                 position:"relative",
-                "margin-top":-this.container.children("tfoot").height(),
+                //"margin-top":-this.container.children("tfoot").height(),
                 "table-layout":"fixed"
             })
             .append(this.container.children("tfoot").clone(true));
@@ -149,15 +161,17 @@
         if(this.options.scrollContainer != null)
             this.createFooterScrollbar();
 
-        this.frozenTable = $("<div>").addClass('inline-block').attr('id', 'frozenContainer');
-        this.regularTable = $("<div>").addClass('inline-block').attr('id', 'regularContainer');
+        this.frozenTable = $("<div>").attr("id", "frozenContainer");
+        this.regularTable = $("<div>").attr("id", "regularContainer");
 
-        this.frozenHeader = this.header.clone(true).attr("id", "frozenHeader");
+        this.frozenHeader = this.header.clone(true).attr("id", "frozenHeader").addClass("headerContainer");
         this.frozenHeader.find(".freeze-column").trigger("freezeToggle");
         this.frozenHeader.find("td,th").hide();
         this.frozenTable.append(this.frozenHeader);
 
-        this.frozenTable.append(this.frozenCols);
+        this.frozenScrollContainer = $("<div>").addClass("frozenScrollContainer");
+        this.frozenScrollContainer.append(this.frozenCols);
+        this.frozenTable.append(this.frozenScrollContainer);
         this.frozenTable.find("th").hide();
 
         this.frozenFooter = this.footer.clone()
@@ -168,13 +182,21 @@
         this.container.before(this.frozenTable);
         this.container.before(this.regularTable);
 
-        this.regularTable.append(this.container);
+        this.scrollContainer = $("<div>").addClass("reportScrollContainer");
+        this.scrollContainer.append(this.container);
 
-        this.container.before(this.header);
-        this.container.after(this.footer);
+        this.regularTable.append($("<div>").addClass("headerFooterContainer headerContainer").append(this.header));
+        this.regularTable.append(this.scrollContainer);
+        this.regularTable.append($("<div>").addClass("headerFooterContainer").append(this.footer));
 
-        this.frozenTable.find("table").eq(1).find("thead, tfoot").css("visibility", "hidden");
-        this.regularTable.find("table").eq(1).find("thead, tfoot").css("visibility", "hidden");
+        var frozenTableMain = this.frozenTable.find("table").eq(1);
+        frozenTableMain.find("thead").css("visibility", "hidden");
+        frozenTableMain.find("tfoot").hide();
+
+        var regularTableMain = this.regularTable.find("table").eq(1);
+        regularTableMain.find("thead").css("visibility", "hidden");
+        regularTableMain.find("tfoot").hide();
+
         this.refresh();
     }
 
@@ -187,8 +209,9 @@
     ReportTable.prototype.scroll = function()
     {
         if ($(window).scrollTop() + $(window).height() > $(document).height()) return;
-        this.moveHeader();
-        this.moveFooter();
+console.log("I'M SCROLLING");
+        //this.moveHeader();
+        //this.moveFooter();
     }
 
     ReportTable.prototype.moveHeader = function()
@@ -239,6 +262,7 @@
                 if(index >= widths.length) {
                     return false;
                 }
+
                 $(this).css("min-width", widths[index]);
                 $(this).css("max-width", widths[index]);
             });
@@ -318,6 +342,16 @@
 
         return widths;
     }
+
+    ReportTable.prototype.getOuterWidthsFromHeader = function ()
+    {
+        var widths = [];
+        this.header.find("tr").eq(1).find("td, th").each(function(index) {
+            widths.push($(this).outerWidth());
+        });
+
+        return widths;
+    } 
 
     ReportTable.prototype.getOuterWidthsFromFirstRow = function()
     {
