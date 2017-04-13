@@ -196,13 +196,15 @@
     ReportTable.prototype.moveHeader = function()
     {
         var headers = $("#regularContainer").find(".reporttable_header");
-        var offset =
-            this.options.offsetHeaderHeight
-            - this.container.offset().top;
+        var offset = this.container.offset().top;
 
-        if(offset < 0) offset = 0;
+        if(offset < 0) {
+            offset = Math.abs(offset) + this.options.offsetHeaderHeight;
+        } else {
+            offset = 0;
+        }
 
-        $(".reporttable_header").css("top", offset);
+        headers.css("top", offset);
     }
 
     ReportTable.prototype.moveFooter = function()
