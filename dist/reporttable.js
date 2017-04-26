@@ -195,12 +195,11 @@
 
     ReportTable.prototype.moveHeader = function()
     {
-        var headers = $("#regularContainer").find(".reporttable_header");
-        var offset = this.container.offset().top;
+        var headers = this.options.scrollContainer.find("#regularContainer").find(".reporttable_header");
 
-        if(offset < 0) {
-            offset = Math.abs(offset) + this.options.offsetHeaderHeight;
-        } else {
+        offset = $(window).scrollTop() + this.options.offsetHeaderHeight - this.container.offset().top;
+        
+        if (offset < 0) {
             offset = 0;
         }
 
