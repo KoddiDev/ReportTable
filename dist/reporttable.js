@@ -257,13 +257,18 @@
     ReportTable.prototype.resizeFooter = function()
     {
         //take the first row of the table, do not use colgroup here as it is deprecated in html5
-        var widths = this.getWidthsFromFirstRow();
+        var widths = this.getOuterWidthsFromFirstRow();
+
         var that = this;
         this.footer.width(this.body.width());
         this.footer.find("tr").each(function(rowCount) {
             $(this).find("td").each(function(index) {
-                if(index >= widths.length) return false;
-                $(this).width(widths[index]);
+                if(index >= widths.length) { 
+                    return false;
+                }
+
+                $(this).css("min-width", widths[index]);
+                $(this).css("max-width", widths[index]);
             });
         });
     }
