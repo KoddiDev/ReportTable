@@ -261,8 +261,12 @@
         this.footer.width(this.body.width());
         this.footer.find("tr").each(function(rowCount) {
             $(this).find("td").each(function(index) {
-                if(index >= widths.length) return false;
-                $(this).width(widths[index]);
+                if(index >= widths.length) { 
+                    return false;
+                }
+
+                $(this).css("min-width", widths[index]);
+                $(this).css("max-width", widths[index]);
             });
         });
     }
