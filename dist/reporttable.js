@@ -256,7 +256,8 @@
     ReportTable.prototype.resizeFooter = function()
     {
         //take the first row of the table, do not use colgroup here as it is deprecated in html5
-        var widths = this.getWidthsFromFirstRow();
+        var widths = this.getOuterWidthsFromFirstRow();
+
         var that = this;
         this.footer.width(this.body.width());
         this.footer.find("tr").each(function(rowCount) {
