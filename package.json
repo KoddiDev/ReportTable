@@ -1,0 +1,29 @@
+{
+  "name": "report-table",
+  "version": "1.0.0",
+  "description": "A reporting table for jQuery that provides some extra features.",
+  "main": "./dist/reporttable.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KoddiDev/ReportTable.git"
+  },
+  "keywords": [
+    "reporttable",
+    "report table",
+    "html table",
+    "custom table",
+    "pmg"
+  ],
+  "author": "Chris Alvares",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KoddiDev/ReportTable/issues"
+  },
+  "homepage": "https://github.com/KoddiDev/ReportTable#readme",
+  "dependencies": {
+    "jquery": "^1.8.3"
+  }
+}
