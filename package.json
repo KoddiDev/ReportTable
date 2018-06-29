@@ -1,6 +1,6 @@
 {
   "name": "report-table",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A reporting table for jQuery that provides some extra features.",
   "main": "./dist/reporttable.js",
   "scripts": {
